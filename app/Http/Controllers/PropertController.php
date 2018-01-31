@@ -11,14 +11,14 @@ class PropertController extends Controller
     public function index()
     {
 
-    	return property::with('cities','categories','features')->get();
+    	return property::with('areas','cities','categories','features','users')->get();
 
      
     }
     public function show($property_id)
 
     {
-          $property=Property::where('id',$property_id)->with('cities','categories','features')->get();
+          $property=Property::where('id',$property_id)->with('areas','city','categories','features','users')->get();
       
     	//s property::with('cities','categories','features')->get();
       //return $property::with('cities','categories','features')->get();

@@ -5,6 +5,8 @@ use App\Property;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\City;
+
 //use App\Http\Controllers\Input;
 
 
@@ -15,10 +17,18 @@ class SearchController extends Controller
     {
     	//$name = Input::get('name');
     	
-    	$property = Property::where('name', 'LIKE', '%'.$request->name.'%')->get();
-    	return $property;
-    	//return $property::with('cities','categories','features')->get();
+    	$property = Property::where('name', 'LIKE', '%'.$request->name.'%')->with('features')->get();
 
+
+     //  $property = Property::where('address', 'LIKE', '%'.$request->address.'%')->with('areas','categories','features')->get();
+       //$city_id=City::where('name','LIKE', '%'.$request->name.'%')->pluck('id');
+        //$property =property::whereIn('area_id',$city_id)->with('areas','categories','features')->get();
+        //$area_id=Area::where('name','LIKE','%'.$request->name.'%')->pluck('id');
+         //$property =property::whereIn('area_id',$city_id)->with('areas','categories','features')->get();
+
+        
+           return $property;
+    	
 
     }
 

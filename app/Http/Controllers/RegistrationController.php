@@ -8,12 +8,11 @@ use App\User;
 use Illuminate\Support\Facades\Auth;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
-use \HttpOz\Roles\Models\Role;
-use HttpOz\Roles\RolesServiceProvider;
 use Validator;
 use DB, Hash, Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Mail\Message;
+use App\Role;
 //use Auth;
 class RegistrationController extends Controller
 {
@@ -26,7 +25,8 @@ class RegistrationController extends Controller
 
    public function show (user $user)
    {
-   	   return $user;
+   	    return $user;
+       
    }
 
    public function register(Request $request)
@@ -60,8 +60,8 @@ class RegistrationController extends Controller
    	     $phone=$request->phone;
    	     $address=$request->address;
    	     $user = User::create(['name' => $name, 'email' => $email, 'password' => Hash::make($password),'phone'=> $phone,'address'=> $address]);
-           $userRole = \HttpOz\Roles\Models\Role::whereName($request->name)->first();
-            $user->attachRole($userRole);
+         $user->Roles()->attach(Role::where('title','User')->first());
+         
    	    
 
    	     //   $user->roles()->attach(Role::where('name', 'superadmin')->first());
@@ -217,7 +217,7 @@ class RegistrationController extends Controller
     }
     public function token(Request $request)
 
-{
+ {
     // $token = JWTAuth::getToken();
     // if(!$token){
     //     throw new BadRequestHtttpException('Token not provided');
@@ -230,8 +230,19 @@ class RegistrationController extends Controller
     }
     return $token;
     // return $this->response->withArray(['token'=>$token]);
-}
-   
+  }
+       public function assignRoleToUser(Request $request)
+    {
+        $user = User::where('email', $request->email)->first();
+        if ($role = Role::select('title')->where('title', $request->role)->first()) {
+            $user->roles()->detach();
+            $user->roles()->attach(Role::where('title', $request->role)->first());
+               return "user role Changed to" . $request->role. "Successfully"; 
+           
+        } else {
+            return "User Role titled " . $request->role . " did not found any matching roles";
+        }
+}   }
 
 
 
@@ -244,5 +255,5 @@ class RegistrationController extends Controller
 
 
 
-}
+
 

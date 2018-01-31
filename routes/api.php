@@ -18,14 +18,11 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 });
-	//Route::group(array('middleware'=>'role:admin'), function() {
+	//Route::group(['middleware' => ['roles:Super Admin', 'jwt.auth']], function () {
+		//users
+		 Route::post('/users/assign-role', 'RegistrationController@assignRoleToUser');
+    //});		 
  
-//properties
-Route::get('properties', 'PropertController@index');
-Route::get('property/{property_id}','PropertController@show');
-Route::post('property','PropertController@store');
-route::put('property/{property_id}','PropertController@update');
-Route::delete('property/{property_id}','PropertController@destroy');
 
 //user
 
@@ -39,6 +36,7 @@ route::post('recover','RegistrationController@recover');
  Route::post('logout', 'RegistrationController@logout');
  route::post('refresh','RegistrationController@token');
 
+
 Route::group(['middleware' => ['jwt.auth','']], function() {
   
 
@@ -47,12 +45,27 @@ Route::group(['middleware' => ['jwt.auth','']], function() {
    });
 
 });
+//Group for Admin
+Route::group(['middleware' => ['roles:admin,super admin', 'jwt.auth']], function () {
+
 //categories
 route::get('categories','CategoryController@index');
 route::get('category/{category}','CategoryController@show');
 route::post('category','CategoryController@add');
 route::put('category/{category}','CategoryController@update');
 route::delete('category/{category}','CategoryController@destroy');
+});
+
+//roles for user
+Route::group(['middleware' => ['roles:admin,user', 'jwt.auth']], function () {
+
+  //properties
+Route::get('properties', 'PropertController@index');
+Route::get('property/{property_id}','PropertController@show');
+Route::post('property','PropertController@store');
+route::put('property/{property_id}','PropertController@update');
+Route::delete('property/{property_id}','PropertController@destroy');
+
 
 //features
 route::get('features','FeaturesController@index');
@@ -77,9 +90,30 @@ route::post('city','CityController@add');
 route::put('city/{city}','CityController@update');
 route::delete('city/{city}','CityController@destroy');
 
-//serach
-route::post('search','SearchController@filter');
-//});
+  //Image Upload API
+  Route::post('/images/upload', 'ImageController@upload');
+    Route::post('/images-property', 'ImageController@addImagesToProperty');
+    Route::delete('/images-property/{image}', 'ImageController@deletePropertyImage');
+
+  });
+
+  
+  
+    Route::group(['middleware' => ['roles:guest,user', 'jwt.auth']], function () {
+    //search
+
+   route::post('search','SearchController@filter');
+
+  //Favourite
+   Route::get('/favoirites', 'FavoiriteController@getAllFavoirites');
+  
+    Route::post('/favoirites', 'FavoiriteController@createFavoirite');
+    
+    Route::get('/user/{user}/favoirites', 'FavoiriteController@getUserFavoirites');
+    Route::delete('/property/{property_id}/users/{user_id}', 'FavoiriteController@delete'); //removing from favourite list
+
+
+   });
 
 
 

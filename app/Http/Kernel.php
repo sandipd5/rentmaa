@@ -19,6 +19,8 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\TrustProxies::class,
+      //  \HttpOz\Roles\Middleware\VerifyRole::class,
+        // \HttpOz\Roles\Middleware\VerifyGroup::class,
 
     ];
 
@@ -60,7 +62,8 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'jwt.auth' => 'Tymon\JWTAuth\Middleware\GetUserFromToken',
         'jwt.refresh' => 'Tymon\JWTAuth\Middleware\RefreshToken',
-         'role' => \HttpOz\Roles\Middleware\VerifyRole::class,
-        'group' => \HttpOz\Roles\Middleware\VerifyGroup::class,
+        'roles' => \App\Http\Middleware\CheckRole::class,
+         //'role' => \HttpOz\Roles\Middleware\VerifyRole::class,
+        //'group' => \HttpOz\Roles\Middleware\VerifyGroup::class,
     ];
 }

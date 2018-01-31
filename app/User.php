@@ -4,12 +4,12 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use HttpOz\Roles\Traits\HasRole;
-use HttpOz\Roles\Contracts\HasRole as HasRoleContract;
+use Illuminate\Support\Facades\Log;
 
-class User extends Authenticatable  implements HasRoleContract
+
+class User extends Authenticatable   
 {
-    use Notifiable,HasRole;
+    use Notifiable;
 
 
 
@@ -31,9 +31,45 @@ class User extends Authenticatable  implements HasRoleContract
         'password', 'remember_token',
     ];
 
+        public function favoirites()
+    {
+        return $this->belongsToMany('App\Favoirite', 'favoirites', 'user_id', 'property_id');
+    }
+
     public function roles(){
-        return $this->belongsToMany(Role::class, 'roles_user', 'role_id', 'user_id');
+        return $this->belongsToMany(Role::class, 'user_role', 'role_id', 'user_id');
      }
+      public function hasAnyRole($roles)
+    {
+        if (is_array($roles)) 
+        {
+            foreach ($roles as $role) 
+            {
+                if ($this->hasRole($role))
+                {
+                    return true;
+                }
+            }
+        } 
+        else 
+        {
+            if ($this->hasRole($roles))
+                return true;
+        }
+        return false;
+    }
+
+    private function hasRole($role)
+    {
+
+        if ($result=$this->roles()->where('title', $role)->first())
+         {
+            return true;
+         } 
+        else
+        return false;
+
+    }
 
 
   

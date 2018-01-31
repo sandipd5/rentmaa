@@ -169,7 +169,7 @@ return [
          * Package Service Providers...
 
          */
-         HttpOz\Roles\RolesServiceProvider::class,
+        // HttpOz\Roles\RolesServiceProvider::class,
      
         /*
          * Application Service Providers...

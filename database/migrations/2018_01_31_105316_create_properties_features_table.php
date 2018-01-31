@@ -14,11 +14,11 @@ class CreatePropertiesFeaturesTable extends Migration
     public function up()
     {
         Schema::create('properties_features', function (Blueprint $table) {
-        $table->increments('id');
-        $table->integer('property_id')->unsigned()->index();
+         $table->increments('id');
+         $table->integer('property_id')->unsigned()->index();
          $table->foreign('property_id')->references('id')->on('properties');
          $table->integer('feature_id')->unsigned()->index();
-         $table->foreign('feature_id')->references('id')->on('features')->onDelete('cascade');
+         $table->foreign('feature_id')->references('id')->on('features');
             $table->timestamps();
         });
     }
